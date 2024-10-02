@@ -21,6 +21,10 @@ import java.util.Map;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
+import org.springframework.samples.petclinic.service.OwnerService;
+import org.springframework.samples.petclinic.web.Response.OpenLibResponse;
+import org.springframework.samples.petclinic.web.Response.OwnerPetBooks;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -49,8 +53,11 @@ class OwnerController {
 
 	private final OwnerRepository owners;
 
-	public OwnerController(OwnerRepository clinicService) {
+	private final OwnerService ownerService;
+
+	public OwnerController(OwnerRepository clinicService, OwnerService ownerService) {
 		this.owners = clinicService;
+		this.ownerService = ownerService;
 	}
 
 	@InitBinder
@@ -60,7 +67,13 @@ class OwnerController {
 
 	@ModelAttribute("owner")
 	public Owner findOwner(@PathVariable(name = "ownerId", required = false) Integer ownerId) {
-		return ownerId == null ? new Owner() : this.owners.findById(ownerId);
+		return ownerId == null ? new Owner() : this.ownerService.findOwnerById(ownerId);
+	}
+
+	@GetMapping("owners/book/{ownerId}")
+	public ResponseEntity<Owner> findOwnerData(@PathVariable(name = "ownerId", required = false) Integer ownerId) {
+		return ownerId == null ? ResponseEntity.ok(new Owner())
+				: ResponseEntity.ok(this.ownerService.findOwnerById(ownerId));
 	}
 
 	@GetMapping("/owners/new")
@@ -68,6 +81,12 @@ class OwnerController {
 		Owner owner = new Owner();
 		model.put("owner", owner);
 		return VIEWS_OWNER_CREATE_OR_UPDATE_FORM;
+	}
+
+	@GetMapping("/owners/data")
+	public ResponseEntity<OwnerPetBooks> data() {
+		return ResponseEntity.ok(ownerService.getData());
+
 	}
 
 	@PostMapping("/owners/new")

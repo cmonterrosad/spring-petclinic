@@ -18,8 +18,11 @@ package org.springframework.samples.petclinic.owner;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.Transient;
 import org.springframework.core.style.ToStringCreator;
 import org.springframework.samples.petclinic.model.Person;
+import org.springframework.samples.petclinic.web.Response.InnerDocs;
+import org.springframework.samples.petclinic.web.Response.OpenLibResponse;
 import org.springframework.util.Assert;
 
 import jakarta.persistence.CascadeType;
@@ -63,6 +66,17 @@ public class Owner extends Person {
 	@JoinColumn(name = "owner_id")
 	@OrderBy("name")
 	private final List<Pet> pets = new ArrayList<>();
+
+	@Transient
+	private List<InnerDocs> books = new ArrayList<>();
+
+	public List<InnerDocs> getBooks() {
+		return this.books;
+	}
+
+	public void setBooks(List<InnerDocs> books) {
+		this.books = books;
+	}
 
 	public String getAddress() {
 		return this.address;
