@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -32,11 +33,11 @@ public class OwnerService {
 	}
 
 	public Owner findOwnerById(int id) {
-		int BOOKS = 9;
+		int BOOKS = 2;
 		int count = 0;
 		Owner owner = this.owners.findById(id);
-		OwnerPetBooks books = getData();
-		List<InnerDocs> innerbook = new ArrayList<>();
+		OwnerPetBooks books = getData(id, owner);
+			List<InnerDocs> innerbook = new ArrayList<>();
 		for (InnerDocs docs : books.getOwnerPetBooks().get(0).getDocs()) {
 			if (count <= BOOKS) {
 				innerbook.add(docs);
@@ -47,12 +48,16 @@ public class OwnerService {
 		return owner;
 	}
 
-	public OwnerPetBooks getData() {
+	public OwnerPetBooks getData(int id, Owner owner) {
+		OpenLibResponse response;
+		if (id == 1) {
 
-		Owner owner = this.owners.findById(1);
-
-		OpenLibResponse response = this.restTemplate.getForObject("https://openlibrary.org/search.json?q=dog",
-				OpenLibResponse.class);
+			response = this.restTemplate.getForObject("https://openlibrary.org/search.json?q=dog&limit=4",
+					OpenLibResponse.class);
+		}
+		else {
+			return new OwnerPetBooks(owner, new OpenLibResponse(0, 0, false, new ArrayList<InnerDocs>()));
+		}
 
 		return new OwnerPetBooks(owner, response);
 	}

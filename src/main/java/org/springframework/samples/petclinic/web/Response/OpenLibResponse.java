@@ -4,6 +4,13 @@ import java.util.List;
 
 public class OpenLibResponse {
 
+	public OpenLibResponse(int numFound, int start, boolean numFoundExact, List<InnerDocs> docs) {
+		this.numFound = numFound;
+		this.start = start;
+		this.numFoundExact = numFoundExact;
+		this.docs = docs;
+	}
+
 	int numFound;
 
 	int start;

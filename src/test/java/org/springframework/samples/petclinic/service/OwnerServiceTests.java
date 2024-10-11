@@ -23,7 +23,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 // Ensure that if the mysql profile is active we connect to the real database:
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 // @TestPropertySource("/application-postgres.properties")
-@Import({WebConfig.class})
+@Import({ WebConfig.class })
 public class OwnerServiceTests {
 
 	@Autowired
@@ -50,6 +50,5 @@ public class OwnerServiceTests {
 		assertThat(owners).isNotNull();
 		assertThat(owners.getBooks().size()).isEqualTo(4);
 	}
-
 
 }

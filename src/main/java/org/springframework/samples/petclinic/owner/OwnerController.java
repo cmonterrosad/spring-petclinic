@@ -85,7 +85,7 @@ class OwnerController {
 
 	@GetMapping("/owners/data")
 	public ResponseEntity<OwnerPetBooks> data() {
-		return ResponseEntity.ok(ownerService.getData());
+		return ResponseEntity.ok(ownerService.getData(0, new Owner()));
 
 	}
 
